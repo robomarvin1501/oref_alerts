@@ -1,0 +1,40 @@
+blueprint:
+  name: Oref alert ended
+  description: Return state to previous when alert ends
+  domain: automation
+  author: robomarvin1501
+  input:
+    wait_time:
+      name: Wait time
+      description: Time to wait when the alert has ended
+      selector:
+        number:
+          mode: slider
+          min: 1
+          max: 20
+          unit_of_measurement: minutes
+      default: 5
+
+mode: single
+
+triggers:
+  - trigger: state
+    entity_id:
+      - binary_sensor.oref_alert
+    to:
+      - "off"
+    for:
+      hours: 0
+      minutes: !input wait_time
+      seconds: 0
+
+conditions: []
+
+actions:
+  - action: scene.turn_on
+    metadata: {}
+    target:
+      entity_id: scene.sirens_lights_previous
+    enabled: true
+    data: {}
+

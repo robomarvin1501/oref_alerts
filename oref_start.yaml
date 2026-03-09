@@ -1,0 +1,50 @@
+blueprint:
+  name: Oref alert begin
+  description: Turns on a lightbulb when the status of your local area becomes unsafe
+  domain: automation
+  author: robomarvin1501
+  input:
+    light_target:
+      name: Light
+      selector:
+        entity:
+          domain:
+            - light
+    rgb_colour:
+      name: Lightbulb Colour
+      selector:
+        color_rgb:
+      default: [224, 27, 36]
+    brightness_percent:
+      name: Bulb brightness percentage
+      selector:
+        number:
+          min: 0
+          max: 100
+      default: 25
+
+mode: single
+
+triggers:
+  - trigger: state
+    entity_id:
+      - binary_sensor.oref_alert
+    to:
+      - "on"
+conditions: []
+actions:
+  - action: scene.create
+    metadata: {}
+    data:
+      scene_id: sirens_lights_previous
+      snapshot_entities: 
+        - !input light_target
+  - action: light.turn_on
+    metadata: {}
+    data:
+      rgb_color: !input rgb_colour
+      brightness_pct: !input brightness_percent
+    target: 
+      entity_id: !input light_target
+
+
